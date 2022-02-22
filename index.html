@@ -5,103 +5,40 @@
     <script src="https://www.google.com/jsapi" type="text/javascript"></script>
     <script type="text/javascript">
      google.load('visualization', '1', {'packages': ['corechart','controls']});
-     google.setOnLoadCallback(drawDashBoardMQ);
+     google.setOnLoadCallback(drawColChartMQ);
     
-    function drawDashBoardMQ() {
-            var queryMQ = new google.visualization.Query(
-      'https://docs.google.com/spreadsheets/d/1AdCfrXSI6dg6I9U6pBiRi4SKydXfUcgUylpAiEfqeIk/edit?usp=sharing');
-      queryMQ.setQuery('select B,E,F'); 
-      queryMQ.send(handleQueryResponseMQ);
-    };
+    function drawColChartMQ() {
+      var query = new google.visualization.Query(
+      'https://docs.google.com/a/yantrajaal.com/spreadsheet/ccc?key=0AhEX55Pfl1eedExUbS1xNzBuQVAyNDJTeG1weFQxbXc&sheet=MilkProduction&range=B2:H37&headers=1');
+      query.setQuery('select B,E,F'); 
+      query.send(handleQueryResponseMQ);
+      };
     
     function handleQueryResponseMQ(responseMQ) {
       if (responseMQ.isError()) {
        alert('Error in query: ' + responseMQ.getMessage() + ' ' + responseMQ.getDetailedMessage());
        return;
-     }
+      }
   
-   var dashboardMQ = new google.visualization.Dashboard(document.getElementById('dash_divMQ')); 
- 
- // Create a filter, passing some options
- // to filter out some rows based on value of column Cow Milk Total
-   var CowMilkRangeSlider = new google.visualization.ControlWrapper({
-    'controlType': 'NumberRangeFilter',
-    'containerId': 'cowfilter_MQ',
-    'options': {
-      'filterColumnLabel': 'Cow Milk Total',
-      'label' : 'Cow',
-      'minValue': 0.0,
-      'maxValue': 5000.0
-    }
-   });
-  
-  // Create a filter, passing some options
-  // to filter out some rows based on value of column Buffalo Milk
-   var BuffaloMilkRangeSlider = new google.visualization.ControlWrapper({
-    'controlType': 'NumberRangeFilter',
-    'containerId': 'buffalofilter_MQ',
-    'options': {
-      'filterColumnLabel': 'Buffalo Milk',
-      'minValue': 0.0,
-      'maxValue': 5000.0
-    }
-   });
-  
-   // Create a filter, passing some options
-   // to filter out rows based on value of column State
-   var StateFilter = new google.visualization.ControlWrapper({
-    'controlType': 'CategoryFilter',
-    'containerId': 'Statefilter_MQ',
-    'options': {
-      'filterColumnLabel': 'State',
-      'ui': {
-          'labelStacking': 'vertical',
-          'allowTyping': false,
-          'allowMultiple': true,
-          'caption' : 'Choose State'
-        },
-     
-    }
-   });
-  
-  // Create a chart, passing some options
-  // This is a chart wrapper
-  var ColChartMQ = new google.visualization.ChartWrapper({
-    'chartType': 'ColumnChart',
-    'containerId': 'chart_divMQ',
-    'options': {
-      'width': 900,
-      'height': 600,
-      'title' : 'Milk Production',
-      'hAxis': {title: 'State', titleTextStyle: {color: 'red'}},
-    }
-  }); 
-  // Connect the three filters to the same chart
-     dashboardMQ.bind([CowMilkRangeSlider,BuffaloMilkRangeSlider,StateFilter], ColChartMQ);
-     
-  // Get the data   
-    var dataMQ = responseMQ.getDataTable();
-    
-  // Publish everything through teh dashboard
-   dashboardMQ.draw(dataMQ)
-   
+    var options = {
+          title: 'Milk Production',
+          hAxis: {title: 'State', titleTextStyle: {color: 'red'}}
+        };
+
+    var data = responseMQ.getDataTable();
+    var chartMQ = new google.visualization.ColumnChart(document.getElementById('chart_divMQ'));
+    chartMQ.draw(data, options );
 }
 
     </script>
   </head>
   <body>
   <h3>
-The Dashboard on this blog </h3>
-<div id="dash_divMQ">
-    <div id="Statefilter_MQ" style="height: 50px; width: 900px;">
+Basic Column Chart Showing All Data</h3>
+<div id="chart_divMQ" style="height: 500px; width: 900px;">
 </div>
-<div id="chart_divMQ" style="height: 600px; width: 900px;">
-</div>
-<div id="cowfilter_MQ" style="height: 50px; width: 900px;">
-</div>
-<div id="buffalofilter_MQ" style="height: 50px; width: 900px;">
-</div>
-</div>
-<a href="https://docs.google.com/spreadsheets/d/1AdCfrXSI6dg6I9U6pBiRi4SKydXfUcgUylpAiEfqeIk/edit?usp=sharing" target="_blank">Data Source</a>
+<a href="https://docs.google.com/a/yantrajaal.com/spreadsheet/ccc?key=0AhEX55Pfl1eedExUbS1xNzBuQVAyNDJTeG1weFQxbXc&amp;usp=drive_web#gid=1" target="_blank">Data Source</a>
   </body>
+<br />
+
   </html>
